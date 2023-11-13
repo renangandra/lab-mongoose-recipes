@@ -17,7 +17,38 @@ mongoose
   })
   .then(() => {
     // Run your code here, after you have insured that the connection was made
+    console.log("All existing recipes deleted from the DB!!!")
+    const newRecipe = {
+      title: 'Misto quente',
+      level: 'Easy Peasy',
+      ingredients: ['pão francês', 'queijo', 'presunto'],
+      cuisine: 'Brasileira',
+      dishType: 'snack',
+      image:
+        'http://culinaria.culturamix.com/blog/wp-content/gallery/misto-quente-3/Misto-Quente-6.jpg',
+      duration: 5,
+      creator: 'unknown'
+    };
+
+    return Recipe.create(newRecipe);
   })
+  .then(result => {
+    console.log(`THISSSSSSSSSSS Recipe created: ${result.title}`)
+    return Recipe.insertMany(data)
+  })
+  .then(result => {
+    console.log(`Created: ${result.length} recipes`);
+    return Recipe.findOneAndUpdate({title: 'Rigatoni alla Genovese'}, {duration: 100}, {new: true}) 
+  })
+  .then(result => {
+    console.log(`Update ${result.title} and new duration is: ${result.duration}`);
+    return Recipe.deleteOne({ title: 'Carrot Cake' })
+  })
+  .then((result) => {
+    console.log("This recipe was deleted:", result)
+  })
+
   .catch(error => {
     console.error('Error connecting to the database', error);
   });
+  .finally(() => mongoose.connection.close())
